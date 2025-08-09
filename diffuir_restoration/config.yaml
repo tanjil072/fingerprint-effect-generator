@@ -1,0 +1,168 @@
+# DiffUIR Fingerprint Restoration Configuration
+
+# Experiment Settings
+experiment:
+  name: "fingerprint_restoration_diffuir"
+  version: "v1.0"
+  description: "Evaluating DiffUIR for removing fingerprint effects from images"
+  random_seed: 42
+
+# Dataset Configuration
+data:
+  # Path to clean images (ground truth)
+  clean_images_path: "./data/clean/"
+
+  # Path to fingerprinted images (degraded)
+  fingerprinted_images_path: "./data/fingerprinted/"
+
+  # Path to save restored images
+  restored_images_path: "./data/restored/"
+
+  # Image preprocessing
+  image_size: [512, 512] # [height, width] or null for original size
+  batch_size: 4
+  num_workers: 4
+
+  # Data split ratios
+  train_ratio: 0.7
+  val_ratio: 0.15
+  test_ratio: 0.15
+
+# Model Configuration
+model:
+  name: "diffuir"
+
+  # DiffUIR specific parameters
+  diffusion_steps: 100
+  noise_schedule: "linear"
+  guidance_scale: 1.0
+
+  # Model architecture
+  in_channels: 3
+  out_channels: 3
+  base_channels: 64
+
+  # Pre-trained weights
+  checkpoint_path: "./models/diffuir_weights/model_best.pth"
+
+  # Device configuration
+  device: "cuda" # "cuda", "cpu", or "auto"
+  mixed_precision: true
+
+# Training Configuration (if fine-tuning)
+training:
+  enabled: false # Set to true if you want to fine-tune
+  epochs: 100
+  learning_rate: 1e-4
+  weight_decay: 1e-5
+  scheduler: "cosine"
+  warmup_steps: 1000
+
+  # Loss configuration
+  loss_type: "l1" # "l1", "l2", "perceptual", "combined"
+  perceptual_weight: 0.1
+
+  # Checkpointing
+  save_every: 10
+  validate_every: 5
+
+# Evaluation Configuration
+evaluation:
+  # Metrics to compute
+  metrics:
+    - "psnr"
+    - "ssim"
+    - "lpips" # Perceptual similarity
+    - "processing_time"
+
+  # PSNR settings
+  psnr_max_val: 1.0
+
+  # SSIM settings
+  ssim_window_size: 11
+  ssim_k1: 0.01
+  ssim_k2: 0.03
+
+  # Save evaluation results
+  save_metrics: true
+  save_comparisons: true
+
+  # Visualization
+  num_visual_samples: 20
+  create_gif: true
+
+# Baseline Methods for Comparison
+baselines:
+  enabled: true
+  methods:
+    - name: "gaussian_blur"
+      params:
+        kernel_size: 5
+        sigma: 1.0
+
+    - name: "median_filter"
+      params:
+        kernel_size: 5
+
+    - name: "bilateral_filter"
+      params:
+        d: 9
+        sigma_color: 75
+        sigma_space: 75
+
+    - name: "non_local_means"
+      params:
+        h: 10
+        template_window_size: 7
+        search_window_size: 21
+
+# Output Configuration
+output:
+  results_dir: "./results/"
+
+  # Subdirectories
+  metrics_dir: "metrics"
+  comparisons_dir: "comparisons"
+  reports_dir: "reports"
+  checkpoints_dir: "checkpoints"
+
+  # File formats
+  image_format: "png"
+  metrics_format: "json"
+
+  # Logging
+  log_level: "INFO"
+  log_file: "restoration.log"
+
+  # Weights & Biases integration
+  wandb:
+    enabled: false
+    project: "fingerprint-restoration"
+    entity: null # Your W&B username/team
+    tags: ["diffuir", "fingerprint", "restoration"]
+
+# Hardware Configuration
+hardware:
+  gpu_memory_fraction: 0.9
+  allow_growth: true
+
+  # Multi-GPU settings
+  use_multi_gpu: false
+  gpu_ids: [0] # List of GPU IDs to use
+
+  # CPU fallback
+  cpu_threads: 4
+
+# Advanced Settings
+advanced:
+  # Debugging
+  debug_mode: false
+  profile_performance: false
+
+  # Reproducibility
+  deterministic: true
+  benchmark: false
+
+  # Memory optimization
+  gradient_checkpointing: true
+  memory_efficient: true
