@@ -1,7 +1,7 @@
-aachen_000001_000019_leftImg8bit.png: PSNR=22.96, SSIM=0.8361
-ulm_000082_000019_leftImg8bit.png: PSNR=25.65, SSIM=0.8579
-cologne_000003_000019_leftImg8bit.png: PSNR=19.98, SSIM=0.7718
-bochum_000000_000313_leftImg8bit.png: PSNR=22.12, SSIM=0.7559
-zurich_000003_000019_leftImg8bit.png: PSNR=20.65, SSIM=0.7613
-Average PSNR for dataset: 22.27
-Average SSIM for dataset: 0.7966
+aachen_000001_000019_leftImg8bit.png: PSNR=53.38, SSIM=0.9992
+ulm_000082_000019_leftImg8bit.png: PSNR=57.20, SSIM=0.9995
+cologne_000003_000019_leftImg8bit.png: PSNR=46.11, SSIM=0.9982
+bochum_000000_000313_leftImg8bit.png: PSNR=52.58, SSIM=0.9988
+zurich_000003_000019_leftImg8bit.png: PSNR=52.12, SSIM=0.9987
+Average PSNR for dataset: 52.28
+Average SSIM for dataset: 0.9989
