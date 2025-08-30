@@ -1,0 +1,39 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.Python
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+.venv311/
+env/
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Data/outputs (keep inputs and masks, ignore generated restorations & reports)
+output/restored_images/
+!output/restored_images/.gitkeep
+psnr_ssim_results.txt
+
+# Model caches
+~/.cache/
+/.cache/
+*.pt
+*.pth
+
+# Notebooks
+.ipynb_checkpoints/

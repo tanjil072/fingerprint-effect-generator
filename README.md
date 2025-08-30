@@ -233,3 +233,47 @@ The modular design makes it easy to:
 The fingerprint effect generator is completely set up and ready to use! It creates realistic, highly visible fingerprint smudges that simulate authentic finger touches on camera lenses or screens.
 
 Start with the basic example and experiment with different configurations to achieve the perfect fingerprint effects for your needs.
+
+## 🧼 Scratch Removal (Inpainting) + PSNR/SSIM Evaluation
+
+This project includes scripts to remove scratches using your label masks and evaluate PSNR/SSIM against `input_images/`.
+
+Outputs and reports are written to `output/restored_images/`.
+
+### Option A — OpenCV Telea (recommended for thin scratches)
+
+Fast, classical inpainting that performed best on thin scratches.
+
+```zsh
+"/Users/tanjilpranto/Desktop/Rain Drop Generation/fingerprint-effect-generator/.venv/bin/python" \
+"/Users/tanjilpranto/Desktop/Rain Drop Generation/fingerprint-effect-generator/restore_and_evaluate.py" \
+--method opencv --opencv_kind telea --opencv_radius 3 --opencv_dilate_ksize 3 --opencv_dilate_iter 1
+```
+
+Results:
+
+- Restored images: `output/restored_images/opencv/`
+- Metrics: `output/restored_images/psnr_ssim_opencv.txt` and `psnr_ssim_combined.csv`
+
+### Option B — LaMa (deep learning, better for wider/complex regions)
+
+Uses LaMa via `lama-cleaner` in a Python 3.11 virtualenv. The first run downloads model weights.
+
+```zsh
+SSL_CERT_FILE="$(("/Users/tanjilpranto/Desktop/Rain Drop Generation/fingerprint-effect-generator/.venv311/bin/python") -c 'import certifi; print(certifi.where())')" \
+REQUESTS_CA_BUNDLE="$(("/Users/tanjilpranto/Desktop/Rain Drop Generation/fingerprint-effect-generator/.venv311/bin/python") -c 'import certifi; print(certifi.where())')" \
+"/Users/tanjilpranto/Desktop/Rain Drop Generation/fingerprint-effect-generator/.venv311/bin/python" \
+"/Users/tanjilpranto/Desktop/Rain Drop Generation/fingerprint-effect-generator/restore_and_evaluate.py" \
+--method lama --lama_dilate_ksize 1 --lama_dilate_iter 0
+```
+
+Results:
+
+- Restored images: `output/restored_images/lama/`
+- Metrics: `output/restored_images/psnr_ssim_lama.txt` and `psnr_ssim_combined.csv`
+
+### Notes
+
+- Inputs: Scratched images in `output/processed_images/`, masks in `output/label_masks/` (white = inpaint region).
+- You can run both methods (one after another) to populate both folders and compare in the combined CSV.
+- For thicker scratches, increase `--opencv_radius` (e.g., 5–7) or add slight mask dilation.
